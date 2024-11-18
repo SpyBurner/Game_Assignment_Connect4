@@ -9,8 +9,8 @@ public class AIController : MonoBehaviour
 {
     public enum Difficulty
     {
-        EASY = 3,
-        MEDIUM = 5,
+        EASY = 1,
+        MEDIUM = 3,
         HARD = 7
     }
 

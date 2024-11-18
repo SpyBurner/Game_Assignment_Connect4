@@ -1,20 +1,21 @@
+using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InputControl : MonoBehaviour
+public class InputControl : MonoBehaviourPunCallbacks, IOnEventCallback 
 {
     public bool allowInput = true;
 
-    private PhotonView photonView;
+    public GameObject pauseMenuPrefab;
+
     private PlayerCore playerCore;
 
     // Start is called before the first frame update
     void Start()
     {
-        photonView = GetComponent<PhotonView>();
         playerCore = GetComponent<PlayerCore>();
     }
 
@@ -38,8 +39,29 @@ public class InputControl : MonoBehaviour
                     playerCore.Interact(hit.collider.gameObject.GetComponent<Slot>());
 
                 }
+
+                //Only take 1st hit
+                break;
             }
         }
-    }
 
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {            
+            RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
+            PhotonNetwork.RaiseEvent(1, null, raiseEventOptions, SendOptions.SendReliable);
+
+            PhotonNetwork.Instantiate(pauseMenuPrefab.name, Vector3.zero, Quaternion.identity);
+        }
+    }
+    public void OnEvent(EventData photonEvent)
+    {
+        if (photonEvent.Code == 1)
+        {
+            allowInput = false;
+        }
+        else if (photonEvent.Code == 2)
+        {
+            allowInput = true;
+        }
+    }
 }

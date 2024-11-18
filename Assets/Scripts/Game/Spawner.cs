@@ -37,6 +37,17 @@ public class Spawner : MonoBehaviourPunCallbacks
         }
 
         newPlayer.GetComponent<PhotonView>().RPC("SetTurnID", RpcTarget.All, PhotonNetwork.LocalPlayer.ActorNumber);
+
+        if (PhotonNetwork.OfflineMode)
+        {
+            GameObject enemy = PhotonNetwork.Instantiate(playerPrefab.name, Vector3.zero, Quaternion.identity);
+
+            enemy.GetComponent<PlayerCore>().SetTurnID(2);
+            enemy.GetComponent<PlayerCore>().color = Color.blue;    
+
+            Destroy(enemy.GetComponent<InputControl>());
+            enemy.AddComponent<AIController>();
+        }
     }
 
     // Start is called before the first frame update

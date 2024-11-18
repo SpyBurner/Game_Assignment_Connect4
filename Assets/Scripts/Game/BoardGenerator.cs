@@ -31,7 +31,7 @@ public class BoardGenerator : MonoBehaviourPunCallbacks, IPunObservable
         generated = true;
         for (int i = -rows/2; i <= rows/2; i++)
         {
-            for (int j = -cols/2; j <= cols/2; j++)
+            for (int j = -cols/2; j <= cols/2 - 1; j++)
             {
                 Vector2 pos = new Vector2(i, j) * gap;
 

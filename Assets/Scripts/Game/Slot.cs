@@ -10,15 +10,11 @@ public class Slot : MonoBehaviourPunCallbacks, IPunObservable
     public int x, y;
     public Color currentColor = Color.white;
 
-    private PhotonView photonView;
-
     private Player occupyingPlayer;
 
     // Start is called before the first frame update
     void Start()
     {
-        photonView = GetComponent<PhotonView>();
-
         photonView.RPC("SetName", RpcTarget.AllBuffered, "Slot " + x + " " + y);
     }
 
@@ -58,8 +54,10 @@ public class Slot : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (stream.IsWriting)
         {
-            stream.SendNext(occupyingPlayer);
-            stream.SendNext(GetComponent<SpriteRenderer>().color);
+            object[] data = new object[2];
+
+            data[0] = (object)occupyingPlayer;
+            data[1] = (object)GetComponent<SpriteRenderer>().color;
         }
         else
         {

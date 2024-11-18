@@ -25,14 +25,14 @@ public class PlayerCore : MonoBehaviourPunCallbacks, IPunObservable
     // Update is called once per frame
     void Update()
     {
-        if (!photonView.IsMine)
-        {
-            return;
-        }
 
         GetComponent<SpriteRenderer>().color = color;
         GameObject.Find("myTurn").GetComponent<Text>().text = turnID.ToString();
 
+        if (!photonView.IsMine)
+        {
+            return;
+        }
         transform.position = pos.transform.position;
     }
 

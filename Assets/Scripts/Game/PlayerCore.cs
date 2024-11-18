@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Unity.Burst.CompilerServices;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class PlayerCore : MonoBehaviourPunCallbacks, IPunObservable
 {
@@ -22,21 +23,19 @@ public class PlayerCore : MonoBehaviourPunCallbacks, IPunObservable
     void Update()
     {
         GetComponent<SpriteRenderer>().color = color;
-
+        GameObject.Find("myTurn").GetComponent<Text>().text = turnID.ToString();
     }
 
     [PunRPC]
     public void SetTurnID(int id)
     {
-        if (photonView.IsMine)
-            turnID = id;
+        turnID = id;
     }
 
     [PunRPC]
     public void SetPosition(float x, float y)
     {
-        if (photonView.IsMine)
-            transform.position = new Vector3(x, y);
+        transform.position = new Vector3(x, y);
     }
 
     public void Interact(Slot slot)

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class TurnManager : PhotonSingleton<TurnManager>, IPunObservable
 {
@@ -23,6 +24,8 @@ public class TurnManager : PhotonSingleton<TurnManager>, IPunObservable
         {
             turnID = 0;
         }
+
+        GameObject.Find("currentTurn").GetComponent<Text>().text = turnID.ToString();
     }
 
     [PunRPC]

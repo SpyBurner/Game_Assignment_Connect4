@@ -26,7 +26,9 @@ public class TurnManager : PhotonSingleton<TurnManager>, IPunObservable
     public void AdvanceTurn()
     {
         turnID++;
-        if (turnID >= PhotonNetwork.PlayerList.Length + 1)
+        Debug.Log("turnID: " + turnID);
+        Debug.Log(PhotonNetwork.PlayerList.Length + 1 + (PhotonNetwork.OfflineMode ? 1 : 0));
+        if (turnID >= PhotonNetwork.PlayerList.Length + 1 + (PhotonNetwork.OfflineMode? 1: 0))
         {
             turnID = 1;
         }

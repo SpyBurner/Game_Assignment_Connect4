@@ -9,8 +9,7 @@ public class Spawner : MonoBehaviourPunCallbacks
     public GameObject playerPrefab;
     public GameObject turnManagerPrefab;
 
-    // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
         //DEBUG
         if (!PhotonNetwork.IsConnected)
@@ -23,15 +22,36 @@ public class Spawner : MonoBehaviourPunCallbacks
         {
             PhotonNetwork.Instantiate(boardPrefab.name, Vector3.zero, Quaternion.identity);
             PhotonNetwork.Instantiate(turnManagerPrefab.name, Vector3.zero, Quaternion.identity);
-        }       
+        }
         Debug.LogError("Spawning player");
         GameObject newPlayer = PhotonNetwork.Instantiate(playerPrefab.name, Vector3.zero, Quaternion.identity);
+
         int num = PhotonNetwork.LocalPlayer.ActorNumber;
-        newPlayer.GetComponent<PlayerCore>().color = new Color(Random.value * num, Random.value * num, Random.value * num);
-        
+        if (num == 1)
+        {
+            newPlayer.GetComponent<PlayerCore>().color = Color.red;
+        }
+        else
+        {
+            newPlayer.GetComponent<PlayerCore>().color = Color.blue;
+        }
+
         newPlayer.GetComponent<PhotonView>().RPC("SetTurnID", RpcTarget.All, PhotonNetwork.LocalPlayer.ActorNumber);
-        
-        //Vector3 newPos = transform.position + newPlayer.GetComponent<SpriteRenderer>().bounds.size.x * Vector3.right * (PhotonNetwork.LocalPlayer.ActorNumber);
-        //newPlayer.GetComponent<PhotonView>().RPC("SetPosition", RpcTarget.All, newPos.x, newPos.y);
+
+        if (PhotonNetwork.OfflineMode)
+        {
+            GameObject enemy = PhotonNetwork.Instantiate(playerPrefab.name, Vector3.zero, Quaternion.identity);
+
+            enemy.GetComponent<PlayerCore>().SetTurnID(2);
+            enemy.GetComponent<PlayerCore>().color = Color.blue;    
+
+            Destroy(enemy.GetComponent<InputControl>());
+            enemy.AddComponent<AIController>();
+        }
+    }
+
+    // Start is called before the first frame update
+    void Start()
+    {
     }
 }

@@ -8,13 +8,22 @@ public class BoardManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        foreach (Slot slot in FindObjectsOfType<Slot>())
+
+    }
+
+    void Update()
+    {
+        if (slotDictionary.Count < 6 * 7)
         {
-            Vector2Int slotPosition = new Vector2Int(slot.x, slot.y);
-            if (!slotDictionary.ContainsKey(slotPosition))
+            foreach (Slot slot in FindObjectsOfType<Slot>())
             {
-                slotDictionary.Add(slotPosition, slot);
+                Vector2Int slotPosition = new Vector2Int(slot.x, slot.y);
+                if (!slotDictionary.ContainsKey(slotPosition))
+                {
+                    slotDictionary.Add(slotPosition, slot);
+                }
             }
+            Debug.Log("BoardManager: " + slotDictionary.Count);
         }
     }
 

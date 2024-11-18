@@ -19,20 +19,22 @@ public class PlayerCore : MonoBehaviourPunCallbacks, IPunObservable
     // Start is called before the first frame update
     void Start()
     {
-        pos = GameObject.Find("P" + PhotonNetwork.LocalPlayer.ActorNumber + "Pos");
     }
 
     // Update is called once per frame
     void Update()
     {
+
+        GetComponent<SpriteRenderer>().color = color;
+        GameObject.Find("myTurn").GetComponent<Text>().text = turnID.ToString();
+
         if (!photonView.IsMine)
         {
             return;
         }
 
-        GetComponent<SpriteRenderer>().color = color;
-        GameObject.Find("myTurn").GetComponent<Text>().text = turnID.ToString();
-
+        if (pos == null)
+            pos = GameObject.Find("P" + turnID + "Pos");
         transform.position = pos.transform.position;
     }
 
@@ -70,14 +72,14 @@ public class PlayerCore : MonoBehaviourPunCallbacks, IPunObservable
         else
             Debug.Log("My turn!");
 
-
         object[] data = new object[2];
-        data[0] = (object)photonView.Owner;
+        data[0] = (object)turnID;
         data[1] = new Dictionary<string, float> { { "r", color.r }, { "g", color.g }, { "b", color.b }, { "a", color.a } };
 
-        slot.GetComponent<PhotonView>().RPC("Occupy", RpcTarget.AllBuffered, data);
+        //slot.GetComponent<PhotonView>().RPC("Occupy", RpcTarget.AllBuffered, data);
+        slot.GetComponent<PhotonView>().RPC("OnClickedByPlayer", RpcTarget.AllBuffered, data);
 
-        FindAnyObjectByType<TurnManager>().GetComponent<PhotonView>().RPC("AdvanceTurn", RpcTarget.AllBuffered);
+        FindAnyObjectByType<TurnManager>().GetComponent<PhotonView>().RPC("AdvanceTurn", RpcTarget.All);
     }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)

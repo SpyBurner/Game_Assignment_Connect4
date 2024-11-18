@@ -33,15 +33,17 @@ public class Slot : MonoBehaviourPunCallbacks, IPunObservable
         
         occupyingPlayer = (int)obj[0];
        
-        Dictionary<string, float> colorDict = (Dictionary<string, float>)obj[1];
+        string name = (string)obj[1];
+
+        Dictionary<string, float> colorDict = (Dictionary<string, float>)obj[2];
         Color color = new Color(colorDict["r"], colorDict["g"], colorDict["b"], colorDict["a"]);
 
         SetColor(color);
         BoardManager board = FindAnyObjectByType<BoardManager>();
         if (board.CheckForFourInARow(this) != -1)
         {
-            PhotonNetwork.LoadLevel("EndGame");
-            // PhotonNetwork.LeaveRoom();
+            PhotonNetwork.CurrentRoom.CustomProperties["winner"] = name;
+            PhotonNetwork.LoadLevel("Selection");
         }
     }
     [PunRPC]

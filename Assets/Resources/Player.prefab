@@ -91,6 +91,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   allowInput: 1
+  pauseMenuPrefab: {fileID: 134884421693894135, guid: 7111413a8575190499db670c8ef93f8a, type: 3}
 --- !u!212 &468180582956896995
 SpriteRenderer:
   m_ObjectHideFlags: 0

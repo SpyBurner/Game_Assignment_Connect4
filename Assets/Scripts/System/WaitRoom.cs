@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class WaitRoom : MonoBehaviourPunCallbacks
 {
     public Text playerCountText;
+    public Text winnerText;
 
     public int minPlayers = 2;
     public int maxPlayers = 4;
@@ -23,6 +24,18 @@ public class WaitRoom : MonoBehaviourPunCallbacks
         if (playerCountText != null)
         {
             playerCountText.text = PhotonNetwork.CurrentRoom.PlayerCount + " / " + maxPlayers;
+        }
+
+        if (winnerText != null)
+        {
+            if (PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey("winner"))
+            {
+                winnerText.text = PhotonNetwork.CurrentRoom.CustomProperties["winner"].ToString() + " wins!";
+            }
+            else
+            {
+                winnerText.text = "";
+            }
         }
     }
 

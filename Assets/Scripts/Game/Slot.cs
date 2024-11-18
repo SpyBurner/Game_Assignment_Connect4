@@ -31,13 +31,20 @@ public class Slot : MonoBehaviourPunCallbacks, IPunObservable
         {
             return;
         }
-
-        occupyingPlayer = (Player)obj[0];
         
+        occupyingPlayer = (Player)obj[0];
+       
         Dictionary<string, float> colorDict = (Dictionary<string, float>)obj[1];
         Color color = new Color(colorDict["r"], colorDict["g"], colorDict["b"], colorDict["a"]);
 
         SetColor(color);
+    }
+    [PunRPC]
+    void OnClickedByPlayer(object[] obj)
+    {
+        Slot emptySlot = FindFarthestUnoccupiedBelow(this);
+        
+        emptySlot.Occupy(obj);
     }
 
     public bool isOccupied()
@@ -78,5 +85,39 @@ public class Slot : MonoBehaviourPunCallbacks, IPunObservable
 
             SetColor(color);
         }
+    }
+
+    public Slot FindFarthestUnoccupiedBelow(Slot obj)
+    {
+        Collider2D collider = obj.GetComponent<Collider2D>();
+        if (collider == null)
+        {
+            Debug.LogError("The object does not have a Collider2D.");
+            return null;
+        }
+
+        Vector2 startPosition = obj.transform.position;
+
+        RaycastHit2D[] hits = Physics2D.RaycastAll(startPosition, Vector2.down, Mathf.Infinity);
+
+        Slot farthestUnoccupied = obj;
+        float farthestDistance = 0f;
+
+        foreach (RaycastHit2D hit in hits)
+        {
+            Slot slot = hit.collider.GetComponent<Slot>();
+            if (slot != null && slot.occupyingPlayer == null)
+            {
+                float distance = Vector2.Distance(startPosition, hit.point);
+
+                if (distance > farthestDistance)
+                {
+                    farthestUnoccupied = hit.collider.gameObject.GetComponent<Slot>();
+                    farthestDistance = distance;
+                }
+            }
+        }
+
+        return farthestUnoccupied;
     }
 }

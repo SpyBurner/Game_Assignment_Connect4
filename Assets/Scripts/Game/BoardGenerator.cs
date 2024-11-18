@@ -37,6 +37,8 @@ public class BoardGenerator : MonoBehaviourPunCallbacks, IPunObservable
 
                 GameObject newSlot = PhotonNetwork.Instantiate("Slot", pos, Quaternion.identity);
 
+                newSlot.GetComponent<PhotonView>().RPC("SetName", RpcTarget.AllBuffered, "Slot" + i + j);
+
                 newSlot.GetComponent<Slot>().x = i;
                 newSlot.GetComponent<Slot>().y = j;
 

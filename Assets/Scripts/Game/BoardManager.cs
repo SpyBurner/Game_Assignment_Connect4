@@ -58,7 +58,7 @@ public class BoardManager : MonoBehaviour
             count += CountSlotsInDirection(checkSlotPosition, -direction, occupier);
             if (count >= 4)
             {
-                Debug.Log("win");
+                Debug.Log(occupier);
                 return true; 
             }
         }

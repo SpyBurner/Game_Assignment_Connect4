@@ -11,7 +11,7 @@ public class Slot : MonoBehaviourPunCallbacks, IPunObservable
     public int x, y;
     public Color currentColor = Color.white;
 
-    private Player occupyingPlayer = null;
+    public Player occupyingPlayer = null;
 
     // Start is called before the first frame update
     void Start()
@@ -37,6 +37,8 @@ public class Slot : MonoBehaviourPunCallbacks, IPunObservable
         Color color = new Color(colorDict["r"], colorDict["g"], colorDict["b"], colorDict["a"]);
 
         SetColor(color);
+        BoardManager board = FindAnyObjectByType<BoardManager>();
+        board.CheckForFourInARow(this);
     }
     [PunRPC]
     void OnClickedByPlayer(object[] obj)

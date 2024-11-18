@@ -2,14 +2,15 @@ using Photon.Pun;
 using Photon.Pun.UtilityScripts;
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using UnityEngine;
 
 public class AIController : MonoBehaviour
 {
     public enum Difficulty
     {
-        EASY = 2,
-        MEDIUM = 3,
+        EASY = 3,
+        MEDIUM = 5,
         HARD = 7
     }
 
@@ -17,12 +18,15 @@ public class AIController : MonoBehaviour
 
     PlayerCore playerCore;
     BoardManager manager;
+    Dictionary<string, (bool, int)> tranposeTable = new Dictionary<string, (bool, int)>();
 
     // Start is called before the first frame update
     void Start()
     {
         manager = FindObjectOfType<BoardManager>();
         playerCore = GetComponent<PlayerCore>();
+
+        difficulty = PhotonNetwork.CurrentRoom.CustomProperties["difficulty"] != null ? (Difficulty)PhotonNetwork.CurrentRoom.CustomProperties["difficulty"] : Difficulty.EASY;
     }
 
     private float moveDelay = 1.0f;
@@ -109,13 +113,18 @@ public class AIController : MonoBehaviour
 
     private int Minimax(int[,] board, int depth, bool isMaximizing, int alpha, int beta, int playerID, Difficulty difficulty)
     {
-        Debug.Log("Depth: " + depth);
-        Debug.Log("IsMaximizing: " + isMaximizing);
-        Debug.Log("Alpha: " + alpha);
-        Debug.Log("Beta: " + beta);
+        //if (depth >= 3) {
+        //    return EvaluateBoard(board, playerID);
+        //}
 
-        if (depth >= 3) {
-            return EvaluateBoard(board, playerID);
+        string boardHash = GetBoardHash(board);
+        if (tranposeTable.ContainsKey(boardHash))
+        {
+            (bool isMax, int score) = tranposeTable[boardHash];
+            if (isMax == isMaximizing)
+            {
+                return score;
+            }
         }
 
         if (depth >= (int)difficulty || IsGameOver(board))
@@ -173,8 +182,16 @@ public class AIController : MonoBehaviour
 
         // Define the scoring criteria
         int twoInARowScore = 10;
-        int threeInARowScore = 30;
-        int fourInARowScore = 100;
+        int threeInARowScore = 500;
+        int fourInARowScore = 10000;
+        int losingScore = -1000000; // Large negative score for losing
+
+        // Check if the other player has won
+        int opponentID = (playerID == 1) ? 2 : 1;
+        if (IsGameOverForPlayer(board, opponentID))
+        {
+            return losingScore;
+        }
 
         // Check all rows, columns, and diagonals
         for (int y = 0; y < 6; y++)
@@ -328,6 +345,80 @@ public class AIController : MonoBehaviour
         }
 
         return false;
+    }
+    private bool IsGameOverForPlayer(int[,] board, int playerID)
+    {
+        // Check all rows, columns, and diagonals for a winning condition for the specified player
+        for (int x = 0; x < 7; x++)
+        {
+            for (int y = 0; y < 6; y++)
+            {
+                // Check horizontal lines
+                if (x <= 3 && CheckLineForPlayer(board, new Vector2Int(x, y), new Vector2Int(1, 0), playerID))
+                {
+                    return true;
+                }
+
+                // Check vertical lines
+                if (y <= 2 && CheckLineForPlayer(board, new Vector2Int(x, y), new Vector2Int(0, 1), playerID))
+                {
+                    return true;
+                }
+
+                // Check diagonal lines (bottom-left to top-right)
+                if (x <= 3 && y <= 2 && CheckLineForPlayer(board, new Vector2Int(x, y), new Vector2Int(1, 1), playerID))
+                {
+                    return true;
+                }
+
+                // Check diagonal lines (top-left to bottom-right)
+                if (x <= 3 && y >= 3 && CheckLineForPlayer(board, new Vector2Int(x, y), new Vector2Int(1, -1), playerID))
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    private bool CheckLineForPlayer(int[,] board, Vector2Int start, Vector2Int direction, int playerID)
+    {
+        int count = 0;
+
+        for (int i = 0; i < 4; i++)
+        {
+            Vector2Int pos = start + direction * i;
+            if (pos.y >= 0 && pos.y < 6 && pos.x >= 0 && pos.x < 7)
+            {
+                if (board[pos.y, pos.x] == playerID)
+                {
+                    count++;
+                    if (count == 4)
+                    {
+                        return true;
+                    }
+                }
+                else
+                {
+                    break;
+                }
+            }
+        }
+        return false;
+    }
+
+    private string GetBoardHash(int[,] board)
+    {
+        string hash = "";
+        for (int y = 0; y < 6; y++)
+        {
+            for (int x = 0; x < 7; x++)
+            {
+                hash += board[y, x].ToString();
+            }
+        }
+        return hash;
     }
 }
 

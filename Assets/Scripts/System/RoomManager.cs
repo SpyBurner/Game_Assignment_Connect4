@@ -4,9 +4,13 @@ using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
 using Unity.VisualScripting;
+using Photon.Realtime;
 public class RoomManager : PhotonSingleton<RoomManager>
 {
     public Text roomNameText;
+
+    public Dropdown difficultyDropdown;
+    private AIController.Difficulty botDifficulty = AIController.Difficulty.EASY;
 
     // Start is called before the first frame update
     void Start()
@@ -23,6 +27,29 @@ public class RoomManager : PhotonSingleton<RoomManager>
         }
     }
 
+    public void SetBotDifficulty()
+    {
+        if (difficultyDropdown == null)
+        {
+            return;
+        }
+        switch (difficultyDropdown.value)
+        {
+            case 0:
+                botDifficulty = AIController.Difficulty.EASY;
+                break;
+            case 1:
+                botDifficulty = AIController.Difficulty.MEDIUM;
+                break;
+            case 2:
+                botDifficulty = AIController.Difficulty.HARD;
+                break;
+            default:
+                botDifficulty = AIController.Difficulty.EASY;
+                break;
+        }
+    }
+
     public void SinglePlayer()
     {
         PhotonNetwork.OfflineMode = true;
@@ -34,7 +61,11 @@ public class RoomManager : PhotonSingleton<RoomManager>
         if (PhotonNetwork.OfflineMode)
         {
             Debug.Log("Creating offline room");
-            PhotonNetwork.CreateRoom(null);
+
+            RoomOptions roomOptions = new RoomOptions();
+            roomOptions.CustomRoomProperties = new ExitGames.Client.Photon.Hashtable();
+            roomOptions.CustomRoomProperties.Add("difficulty", botDifficulty);
+            PhotonNetwork.CreateRoom(null, roomOptions);
             return;
         }
 

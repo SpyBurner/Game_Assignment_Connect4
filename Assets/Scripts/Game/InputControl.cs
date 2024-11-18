@@ -6,9 +6,11 @@ using UnityEngine;
 
 public class InputControl : MonoBehaviour
 {
+    public bool allowInput = true;
 
     private PhotonView photonView;
     private PlayerCore playerCore;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -19,13 +21,14 @@ public class InputControl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!photonView.IsMine) return;
-
+        if (!photonView.IsMine || !allowInput)
+        {
+            return;
+        }
         if (Input.GetMouseButtonDown(0))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit2D[] hits = Physics2D.RaycastAll(ray.origin, ray.direction, Mathf.Infinity);
-
 
             Debug.Log("Raycast hit: " + hits.Length);
             foreach (RaycastHit2D hit in hits)
@@ -37,4 +40,5 @@ public class InputControl : MonoBehaviour
             }
         }
     }
+
 }

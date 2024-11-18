@@ -52,7 +52,8 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   observableSearch: 2
-  ObservedComponents: []
+  ObservedComponents:
+  - {fileID: 2193900206841151814}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -68,6 +69,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: feaf5328c3f5800408668a258efb0dd0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  turnID: 0
   color: {r: 1, g: 0, b: 0, a: 1}
   OnTurnStart:
     m_PersistentCalls:
@@ -87,3 +89,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a57ff115f59d23478da0234f827caf8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  allowInput: 1

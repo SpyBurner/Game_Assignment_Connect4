@@ -33,11 +33,17 @@ public class Slot : MonoBehaviourPunCallbacks, IPunObservable
         }
 
         occupyingPlayer = (Player)obj[0];
-        Color color = (Color)obj[1];
+        
+        Dictionary<string, float> colorDict = (Dictionary<string, float>)obj[1];
+        Color color = new Color(colorDict["r"], colorDict["g"], colorDict["b"], colorDict["a"]);
 
         SetColor(color);
     }
 
+    public bool isOccupied()
+    {
+        return occupyingPlayer != null;
+    }
     public void SetColor(Color color)
     {
         currentColor = color;
@@ -54,15 +60,23 @@ public class Slot : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (stream.IsWriting)
         {
-            object[] data = new object[2];
+            object[] data = new object[3];
+            data[0] = (object)photonView.Owner;
+            data[1] = new Dictionary<string, float> { { "r", currentColor.r }, { "g", currentColor.g }, { "b", currentColor.b }, { "a", currentColor.a } };
+            data[2] = gameObject.name;
 
-            data[0] = (object)occupyingPlayer;
-            data[1] = (object)GetComponent<SpriteRenderer>().color;
+            stream.SendNext(data);
         }
         else
         {
-            occupyingPlayer = (Player)stream.ReceiveNext();
-            SetColor((Color)stream.ReceiveNext());
+            object[] data = (object[])stream.ReceiveNext();
+
+            occupyingPlayer = data[0] as Player;
+            Dictionary<string, float> colorDict = data[1] as Dictionary<string, float>;
+            Color color = new Color(colorDict["r"], colorDict["g"], colorDict["b"], colorDict["a"]);
+            gameObject.name = (string)data[2];
+
+            SetColor(color);
         }
     }
 }

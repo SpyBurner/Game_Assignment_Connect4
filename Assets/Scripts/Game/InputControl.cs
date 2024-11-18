@@ -6,9 +6,11 @@ using UnityEngine;
 
 public class InputControl : MonoBehaviour
 {
+    public bool allowInput = true;
 
     private PhotonView photonView;
     private PlayerCore playerCore;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -20,6 +22,7 @@ public class InputControl : MonoBehaviour
     void Update()
     {
         if (!photonView.IsMine) return;
+
 
         if (Input.GetMouseButtonDown(0))
         {
@@ -37,4 +40,5 @@ public class InputControl : MonoBehaviour
             }
         }
     }
+
 }

@@ -12,8 +12,11 @@ public class Spawner : MonoBehaviourPunCallbacks
     void Start()
     {
         //DEBUG
-        PhotonNetwork.OfflineMode = true;
-        PhotonNetwork.CreateRoom(null);
+        if (!PhotonNetwork.IsConnected)
+        {
+            PhotonNetwork.OfflineMode = true;
+            PhotonNetwork.CreateRoom(null);
+        }
         //
         if (PhotonNetwork.IsMasterClient)
         {

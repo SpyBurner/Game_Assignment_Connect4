@@ -29,7 +29,7 @@ public class PlayerCore : MonoBehaviourPunCallbacks
 
     public void Interact(Slot slot)
     {
-        object[] data = new Object[2];
+        object[] data = new object[2];
         data[0] = photonView.Owner;
         data[1] = color;
 

@@ -29,17 +29,15 @@ public class Slot : MonoBehaviourPunCallbacks, IPunObservable
     }
 
     [PunRPC]
-    public void Occupy(EventData obj)
+    public void Occupy(object[] obj)
     {
         if (!photonView.IsMine || occupyingPlayer != null)
         {
             return;
         }
 
-        object[] data = (object[])obj.CustomData;
-
-        occupyingPlayer = (Player)data[0];
-        Color color = (Color)data[1];
+        occupyingPlayer = (Player)obj[0];
+        Color color = (Color)obj[1];
 
         SetColor(color);
     }

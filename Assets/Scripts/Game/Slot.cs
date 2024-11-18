@@ -1,3 +1,4 @@
+using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
 using System.Collections;
@@ -28,18 +29,21 @@ public class Slot : MonoBehaviourPunCallbacks, IPunObservable
     }
 
     [PunRPC]
-    public void Occupy(Player player, Color color)
+    public void Occupy(EventData obj)
     {
         if (!photonView.IsMine || occupyingPlayer != null)
         {
             return;
         }
 
-        occupyingPlayer = player;
+        object[] data = (object[])obj.CustomData;
+
+        occupyingPlayer = (Player)data[0];
+        Color color = (Color)data[1];
+
         SetColor(color);
     }
 
-    [PunRPC]
     public void SetColor(Color color)
     {
         currentColor = color;

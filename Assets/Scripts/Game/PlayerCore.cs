@@ -5,7 +5,7 @@ using Unity.Burst.CompilerServices;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class PlayerCore : MonoBehaviour
+public class PlayerCore : MonoBehaviourPunCallbacks
 {
     public int turnID { get; private set; } = -1;
     public Color color = Color.red;
@@ -29,7 +29,11 @@ public class PlayerCore : MonoBehaviour
 
     public void Interact(Slot slot)
     {
-        slot.GetComponent<PhotonView>().RPC("Occupy", RpcTarget.AllBuffered, photonView.Owner, color);
+        object[] data = new Object[2];
+        data[0] = photonView.Owner;
+        data[1] = color;
+
+        slot.GetComponent<PhotonView>().RPC("Occupy", RpcTarget.AllBuffered, data);
     }
 
 

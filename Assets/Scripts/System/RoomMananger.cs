@@ -11,6 +11,7 @@ public class RoomManager : PhotonSingleton<RoomManager>
     // Start is called before the first frame update
     void Start()
     {
+        PhotonNetwork.AutomaticallySyncScene = true;
     }
 
     // Update is called once per frame
@@ -20,6 +21,12 @@ public class RoomManager : PhotonSingleton<RoomManager>
         {
             roomNameText.text = PhotonNetwork.CurrentRoom.Name;
         }
+    }
+
+    public void SinglePlayer()
+    {
+        PhotonNetwork.OfflineMode = true;
+        CreateRoom();
     }
 
     public void CreateRoom()
@@ -46,7 +53,6 @@ public class RoomManager : PhotonSingleton<RoomManager>
 
         PhotonNetwork.CreateRoom(roomName);
     }
-
 
     public void JoinRoom()
     {

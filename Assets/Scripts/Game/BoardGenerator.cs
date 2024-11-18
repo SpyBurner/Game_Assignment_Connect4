@@ -48,11 +48,17 @@ public class BoardGenerator : MonoBehaviourPunCallbacks, IPunObservable
 
     GameObject GetSlotAt(int i, int j)
     {
+        if (!slots.ContainsKey((i, j))){
+            GameObject slot = GameObject.Find("Slot" + i + j);
+            if (slot != null)
+            {
+                slots.Add((i, j), slot);
+            }
+        }
         return (GameObject)slots[(i, j)];
     }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
-        throw new System.NotImplementedException();
     }
 }

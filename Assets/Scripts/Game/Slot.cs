@@ -38,7 +38,11 @@ public class Slot : MonoBehaviourPunCallbacks, IPunObservable
 
         SetColor(color);
         BoardManager board = FindAnyObjectByType<BoardManager>();
-        board.CheckForFourInARow(this);
+        if (board.CheckForFourInARow(this) != -1)
+        {
+            PhotonNetwork.LoadLevel("MainMenu");
+            PhotonNetwork.LeaveRoom();
+        }
     }
     [PunRPC]
     void OnClickedByPlayer(object[] obj)

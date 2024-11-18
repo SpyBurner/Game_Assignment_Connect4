@@ -39,10 +39,10 @@ public class BoardManager : MonoBehaviour
         return null;
     }
 
-    public Player CheckForFourInARow(Slot checkSlot)
+    public int CheckForFourInARow(Slot checkSlot)
     {
-        if (checkSlot == null || checkSlot.occupyingPlayer == null)
-            return null;
+        if (checkSlot == null || checkSlot.occupyingPlayer == -1)
+            return -1;
 
         Vector2Int[] directions = new Vector2Int[]
         {
@@ -53,7 +53,7 @@ public class BoardManager : MonoBehaviour
         };
 
         Vector2Int checkSlotPosition = new Vector2Int(checkSlot.x, checkSlot.y);
-        Player occupier = checkSlot.occupyingPlayer;
+        int occupier = checkSlot.occupyingPlayer;
 
         foreach (Vector2Int direction in directions)
         {
@@ -68,10 +68,10 @@ public class BoardManager : MonoBehaviour
             }
         }
 
-        return null;
+        return -1;
     }
 
-    private int CountSlotsInDirection(Vector2Int startPosition, Vector2Int direction, Player occupier)
+    private int CountSlotsInDirection(Vector2Int startPosition, Vector2Int direction, int occupier)
     {
         Vector2Int nextPos = startPosition + direction;
         if (slotDictionary.ContainsKey(nextPos))

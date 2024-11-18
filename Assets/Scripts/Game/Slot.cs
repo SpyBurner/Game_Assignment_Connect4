@@ -3,6 +3,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using UnityEngine;
 
 public class Slot : MonoBehaviourPunCallbacks, IPunObservable
@@ -10,24 +11,22 @@ public class Slot : MonoBehaviourPunCallbacks, IPunObservable
     public int x, y;
     public Color currentColor = Color.white;
 
-    private Player occupyingPlayer;
+    private Player occupyingPlayer = null;
 
     // Start is called before the first frame update
     void Start()
     {
-        photonView.RPC("SetName", RpcTarget.AllBuffered, "Slot " + x + " " + y);
     }
 
     // Update is called once per frame
     void Update()
     {
-        
     }
 
     [PunRPC]
     public void Occupy(object[] obj)
     {
-        if (!photonView.IsMine || occupyingPlayer != null)
+        if (occupyingPlayer != null)
         {
             return;
         }
@@ -60,10 +59,12 @@ public class Slot : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (stream.IsWriting)
         {
-            object[] data = new object[3];
-            data[0] = (object)photonView.Owner;
+            object[] data = new object[5];
+            data[0] = (object)occupyingPlayer;
             data[1] = new Dictionary<string, float> { { "r", currentColor.r }, { "g", currentColor.g }, { "b", currentColor.b }, { "a", currentColor.a } };
             data[2] = gameObject.name;
+            data[3] = x;
+            data[4] = y;
 
             stream.SendNext(data);
         }
@@ -75,6 +76,8 @@ public class Slot : MonoBehaviourPunCallbacks, IPunObservable
             Dictionary<string, float> colorDict = data[1] as Dictionary<string, float>;
             Color color = new Color(colorDict["r"], colorDict["g"], colorDict["b"], colorDict["a"]);
             gameObject.name = (string)data[2];
+            x = (int)data[3];
+            y = (int)data[4];
 
             SetColor(color);
         }

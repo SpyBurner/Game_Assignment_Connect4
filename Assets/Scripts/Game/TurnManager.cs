@@ -7,8 +7,7 @@ using UnityEngine.UI;
 
 public class TurnManager : PhotonSingleton<TurnManager>, IPunObservable
 {
-    public int turnID = 0;
-
+    public int turnID = 1;
 
     public UnityEvent OnAdvanceTurn;
     // Start is called before the first frame update
@@ -20,11 +19,6 @@ public class TurnManager : PhotonSingleton<TurnManager>, IPunObservable
     // Update is called once per frame
     void Update()
     {
-        if (turnID >= PhotonNetwork.PlayerList.Length)
-        {
-            turnID = 0;
-        }
-
         GameObject.Find("currentTurn").GetComponent<Text>().text = turnID.ToString();
     }
 
@@ -32,9 +26,9 @@ public class TurnManager : PhotonSingleton<TurnManager>, IPunObservable
     public void AdvanceTurn()
     {
         turnID++;
-        if (turnID >= PhotonNetwork.PlayerList.Length)
+        if (turnID >= PhotonNetwork.PlayerList.Length + 1)
         {
-            turnID = 0;
+            turnID = 1;
         }
         OnAdvanceTurn.Invoke();
     }

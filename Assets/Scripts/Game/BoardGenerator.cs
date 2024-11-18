@@ -37,27 +37,15 @@ public class BoardGenerator : MonoBehaviourPunCallbacks, IPunObservable
 
                 GameObject newSlot = PhotonNetwork.Instantiate("Slot", pos, Quaternion.identity);
 
-                newSlot.GetComponent<PhotonView>().RPC("SetName", RpcTarget.AllBuffered, "Slot" + i + j);
-
                 newSlot.GetComponent<Slot>().x = i;
                 newSlot.GetComponent<Slot>().y = j;
 
-                newSlot.transform.parent = this.transform;
-                slots.Add((i, j), newSlot);
-            }
-        }
-    }
+                newSlot.GetComponent<PhotonView>().RPC("SetName", RpcTarget.AllBuffered, "Slot" + i + j);
 
-    GameObject GetSlotAt(int i, int j)
-    {
-        if (!slots.ContainsKey((i, j))){
-            GameObject slot = GameObject.Find("Slot" + i + j);
-            if (slot != null)
-            {
-                slots.Add((i, j), slot);
+                newSlot.transform.parent = this.transform;
+                //slots.Add((i, j), newSlot);
             }
         }
-        return (GameObject)slots[(i, j)];
     }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)

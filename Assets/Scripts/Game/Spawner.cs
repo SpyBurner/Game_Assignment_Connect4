@@ -24,13 +24,14 @@ public class Spawner : MonoBehaviourPunCallbacks
             PhotonNetwork.Instantiate(boardPrefab.name, Vector3.zero, Quaternion.identity);
             PhotonNetwork.Instantiate(turnManagerPrefab.name, Vector3.zero, Quaternion.identity);
         }       
-
+        Debug.LogError("Spawning player");
         GameObject newPlayer = PhotonNetwork.Instantiate(playerPrefab.name, Vector3.zero, Quaternion.identity);
-        newPlayer.GetComponent<PlayerCore>().color = new Color(Random.value, Random.value, Random.value);
+        int num = PhotonNetwork.LocalPlayer.ActorNumber;
+        newPlayer.GetComponent<PlayerCore>().color = new Color(Random.value * num, Random.value * num, Random.value * num);
         
-        newPlayer.GetComponent<PhotonView>().RPC("SetTurnID", RpcTarget.AllBuffered, PhotonNetwork.PlayerList.Length - 1);
+        newPlayer.GetComponent<PhotonView>().RPC("SetTurnID", RpcTarget.All, PhotonNetwork.LocalPlayer.ActorNumber);
         
-        Vector3 newPos = transform.position + newPlayer.GetComponent<SpriteRenderer>().bounds.size.x * Vector3.right * (PhotonNetwork.PlayerList.Length - 1);
-        newPlayer.GetComponent<PhotonView>().RPC("SetPosition", RpcTarget.AllBuffered, newPos.x, newPos.y);
+        //Vector3 newPos = transform.position + newPlayer.GetComponent<SpriteRenderer>().bounds.size.x * Vector3.right * (PhotonNetwork.LocalPlayer.ActorNumber);
+        //newPlayer.GetComponent<PhotonView>().RPC("SetPosition", RpcTarget.All, newPos.x, newPos.y);
     }
 }

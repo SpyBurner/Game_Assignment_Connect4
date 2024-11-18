@@ -14,22 +14,35 @@ public class PlayerCore : MonoBehaviourPunCallbacks, IPunObservable
     public UnityEvent OnTurnStart;
     public UnityEvent OnTurnEnd;
 
+    private GameObject pos = null;
+
     // Start is called before the first frame update
     void Start()
     {
+        pos = GameObject.Find("P" + PhotonNetwork.LocalPlayer.ActorNumber + "Pos");
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (!photonView.IsMine)
+        {
+            return;
+        }
+
         GetComponent<SpriteRenderer>().color = color;
         GameObject.Find("myTurn").GetComponent<Text>().text = turnID.ToString();
+
+        transform.position = pos.transform.position;
     }
 
     [PunRPC]
     public void SetTurnID(int id)
     {
-        turnID = id;
+        if (photonView.IsMine)
+        {
+            turnID = id;
+        }
     }
 
     [PunRPC]
@@ -40,16 +53,22 @@ public class PlayerCore : MonoBehaviourPunCallbacks, IPunObservable
 
     public void Interact(Slot slot)
     {
-        if (slot.isOccupied() || !photonView.IsMine)
+        if (slot.isOccupied())
         {
+            Debug.LogError("Not my view!");
             return;
         }
+        else 
+            Debug.LogError("My view!");
 
         TurnManager turnManager = FindAnyObjectByType<TurnManager>();
         if (turnManager && turnManager.turnID != turnID)
         {
+            Debug.LogError("Not my turn!");
             return;
         }
+        else
+            Debug.Log("My turn!");
 
 
         object[] data = new object[2];
@@ -70,11 +89,17 @@ public class PlayerCore : MonoBehaviourPunCallbacks, IPunObservable
             stream.SendNext(color.g);
             stream.SendNext(color.b);
             stream.SendNext(color.a);
+
+            stream.SendNext(transform.position.x);
+            stream.SendNext(transform.position.y);
+            stream.SendNext(transform.position.z);
         }
         else
         {
             turnID = (int)stream.ReceiveNext();
             color = new Color((float)stream.ReceiveNext(), (float)stream.ReceiveNext(), (float)stream.ReceiveNext(), (float)stream.ReceiveNext());
+
+            transform.position = new Vector3((float)stream.ReceiveNext(), (float)stream.ReceiveNext(), (float)stream.ReceiveNext());
         }
     }
 }

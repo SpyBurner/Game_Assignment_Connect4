@@ -47,12 +47,6 @@ public class PlayerCore : MonoBehaviourPunCallbacks, IPunObservable
         }
     }
 
-    [PunRPC]
-    public void SetPosition(float x, float y)
-    {
-        transform.position = new Vector3(x, y);
-    }
-
     public void Interact(Slot slot)
     {
         if (slot.isOccupied())

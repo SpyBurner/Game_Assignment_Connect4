@@ -40,8 +40,8 @@ public class Slot : MonoBehaviourPunCallbacks, IPunObservable
         BoardManager board = FindAnyObjectByType<BoardManager>();
         if (board.CheckForFourInARow(this) != -1)
         {
-            PhotonNetwork.LoadLevel("MainMenu");
-            PhotonNetwork.LeaveRoom();
+            PhotonNetwork.LoadLevel("EndGame");
+            // PhotonNetwork.LeaveRoom();
         }
     }
     [PunRPC]

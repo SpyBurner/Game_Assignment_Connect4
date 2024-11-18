@@ -12,8 +12,11 @@ public class BoardManager : MonoBehaviour
         foreach (Slot slot in FindObjectsOfType<Slot>())
         {
             Vector2Int coords = new Vector2Int(slot.x, slot.y);
-            if (!slotDictionary.ContainsKey(coords)) slotDictionary.Add(coords, slot);
-            
+            if (!slotDictionary.ContainsKey(coords))
+            {
+                slotDictionary.Add(coords, slot);
+                Debug.Log(slot);
+            }
         }
     }
 }

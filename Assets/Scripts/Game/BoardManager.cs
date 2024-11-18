@@ -9,9 +9,14 @@ public class BoardManager : MonoBehaviour
 {
     public Dictionary<Vector2Int, Slot> slotDictionary = new Dictionary<Vector2Int, Slot>();
     // Start is called before the first frame update
+    void Start()
+    {
+
+    }
+
     void Update()
     {
-        if (slotDictionary.Count != 42)
+        if (slotDictionary.Count < 6 * 7)
         {
             foreach (Slot slot in FindObjectsOfType<Slot>())
             {
@@ -19,9 +24,9 @@ public class BoardManager : MonoBehaviour
                 if (!slotDictionary.ContainsKey(slotPosition))
                 {
                     slotDictionary.Add(slotPosition, slot);
-
                 }
             }
+            Debug.Log("BoardManager: " + slotDictionary.Count);
         }
     }
 

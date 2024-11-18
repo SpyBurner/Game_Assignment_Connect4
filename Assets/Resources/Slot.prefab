@@ -142,6 +142,7 @@ MonoBehaviour:
   x: 0
   y: 0
   currentColor: {r: 1, g: 1, b: 1, a: 1}
+  occupyingPlayer: -1
 --- !u!114 &-6241389232067961673
 MonoBehaviour:
   m_ObjectHideFlags: 0

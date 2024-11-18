@@ -11,7 +11,7 @@ public class Slot : MonoBehaviourPunCallbacks, IPunObservable
     public int x, y;
     public Color currentColor = Color.white;
 
-    public Player occupyingPlayer = null;
+    public int occupyingPlayer = -1;
 
     // Start is called before the first frame update
     void Start()
@@ -26,12 +26,12 @@ public class Slot : MonoBehaviourPunCallbacks, IPunObservable
     [PunRPC]
     public void Occupy(object[] obj)
     {
-        if (occupyingPlayer != null)
+        if (occupyingPlayer != -1)
         {
             return;
         }
         
-        occupyingPlayer = (Player)obj[0];
+        occupyingPlayer = (int)obj[0];
        
         Dictionary<string, float> colorDict = (Dictionary<string, float>)obj[1];
         Color color = new Color(colorDict["r"], colorDict["g"], colorDict["b"], colorDict["a"]);
@@ -50,7 +50,7 @@ public class Slot : MonoBehaviourPunCallbacks, IPunObservable
 
     public bool isOccupied()
     {
-        return occupyingPlayer != null;
+        return occupyingPlayer != -1;
     }
     public void SetColor(Color color)
     {
@@ -81,7 +81,7 @@ public class Slot : MonoBehaviourPunCallbacks, IPunObservable
         {
             object[] data = (object[])stream.ReceiveNext();
 
-            occupyingPlayer = data[0] as Player;
+            occupyingPlayer = (int)data[0];
             Dictionary<string, float> colorDict = data[1] as Dictionary<string, float>;
             Color color = new Color(colorDict["r"], colorDict["g"], colorDict["b"], colorDict["a"]);
             gameObject.name = (string)data[2];
@@ -111,7 +111,7 @@ public class Slot : MonoBehaviourPunCallbacks, IPunObservable
         foreach (RaycastHit2D hit in hits)
         {
             Slot slot = hit.collider.GetComponent<Slot>();
-            if (slot != null && slot.occupyingPlayer == null)
+            if (slot != null && slot.occupyingPlayer == -1)
             {
                 float distance = Vector2.Distance(startPosition, hit.point);
 

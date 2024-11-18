@@ -75,7 +75,8 @@ public class PlayerCore : MonoBehaviourPunCallbacks, IPunObservable
         data[0] = (object)photonView.Owner;
         data[1] = new Dictionary<string, float> { { "r", color.r }, { "g", color.g }, { "b", color.b }, { "a", color.a } };
 
-        slot.GetComponent<PhotonView>().RPC("Occupy", RpcTarget.AllBuffered, data);
+        //slot.GetComponent<PhotonView>().RPC("Occupy", RpcTarget.AllBuffered, data);
+        slot.GetComponent<PhotonView>().RPC("OnClickedByPlayer", RpcTarget.AllBuffered, data);
 
         FindAnyObjectByType<TurnManager>().GetComponent<PhotonView>().RPC("AdvanceTurn", RpcTarget.AllBuffered);
     }

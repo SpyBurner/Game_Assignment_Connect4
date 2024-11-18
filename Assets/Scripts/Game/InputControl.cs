@@ -36,6 +36,7 @@ public class InputControl : MonoBehaviour
                 if (hit.collider.gameObject.tag == "Slot")
                 {
                     playerCore.Interact(hit.collider.gameObject.GetComponent<Slot>());
+
                 }
             }
         }

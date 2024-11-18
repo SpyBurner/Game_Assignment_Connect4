@@ -34,10 +34,10 @@ public class BoardManager : MonoBehaviour
         return null;
     }
 
-    public bool CheckForFourInARow(Slot checkSlot)
+    public Player CheckForFourInARow(Slot checkSlot)
     {
         if (checkSlot == null || checkSlot.occupyingPlayer == null)
-            return false;
+            return null;
 
         Vector2Int[] directions = new Vector2Int[]
         {
@@ -59,11 +59,11 @@ public class BoardManager : MonoBehaviour
             if (count >= 4)
             {
                 Debug.Log(occupier);
-                return true; 
+                return occupier; 
             }
         }
 
-        return false;
+        return null;
     }
 
     private int CountSlotsInDirection(Vector2Int startPosition, Vector2Int direction, Player occupier)

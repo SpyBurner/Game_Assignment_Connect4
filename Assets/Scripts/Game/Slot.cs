@@ -30,6 +30,9 @@ public class Slot : MonoBehaviourPunCallbacks, IPunObservable
         {
             return;
         }
+        ParticleSystem ps = FindAnyObjectByType<ParticleSystem>();
+        ps.transform.position = this.transform.position;
+        ps.Play();
         
         occupyingPlayer = (int)obj[0];
        

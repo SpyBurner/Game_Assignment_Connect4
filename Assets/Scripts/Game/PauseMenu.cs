@@ -5,7 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PauseMeny : MonoBehaviourPunCallbacks
+public class PauseMenu : MonoBehaviourPunCallbacks
 {
     public void Continue()
     {

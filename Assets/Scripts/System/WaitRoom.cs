@@ -10,7 +10,7 @@ public class WaitRoom : MonoBehaviourPunCallbacks
     public Text winnerText;
 
     public int minPlayers = 2;
-    public int maxPlayers = 4;
+    public int maxPlayers = 2;
 
     // Start is called before the first frame update
     void Start()

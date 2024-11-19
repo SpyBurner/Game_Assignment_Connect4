@@ -815,7 +815,7 @@ MonoBehaviour:
   playerCountText: {fileID: 1760564311}
   winnerText: {fileID: 1260475499}
   minPlayers: 2
-  maxPlayers: 4
+  maxPlayers: 2
 --- !u!1 &1516411529
 GameObject:
   m_ObjectHideFlags: 0

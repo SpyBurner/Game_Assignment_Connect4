@@ -68,7 +68,11 @@ public class PlayerCore : MonoBehaviourPunCallbacks, IPunObservable
 
         object[] data = new object[3];
         data[0] = (object)turnID;
-        data[1] = PhotonNetwork.LocalPlayer.NickName;
+
+        if (GetComponent<AIController>())
+            data[1] = "AI";
+        else
+            data[1] = PhotonNetwork.LocalPlayer.NickName;
         data[2] = new Dictionary<string, float> { { "r", color.r }, { "g", color.g }, { "b", color.b }, { "a", color.a } };
 
         //slot.GetComponent<PhotonView>().RPC("Occupy", RpcTarget.AllBuffered, data);

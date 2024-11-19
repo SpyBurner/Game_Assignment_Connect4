@@ -31,6 +31,7 @@ public class Slot : MonoBehaviourPunCallbacks, IPunObservable
             return;
         }
         ParticleSystem ps = FindAnyObjectByType<ParticleSystem>();
+        ps.startColor = currentColor;
         ps.transform.position = this.transform.position;
         ps.Play();
         
